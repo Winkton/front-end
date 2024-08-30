@@ -1,11 +1,16 @@
+import React from 'react';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './pages/MainPage';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <h1>2024 윙커톤 4팀 🔥</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
-
-export default App;
