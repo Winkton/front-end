@@ -11,6 +11,7 @@ const Container = styled.div`
   height: 80px;
   padding: 0px 40px;
   gap: 20px;
+  box-sizing: border-box;
   border-radius: 30px 30px 0px 0px;
   border-bottom: 1px solid #d9d9d9;
   background: var(--background-color);
@@ -23,11 +24,12 @@ const UserProfileImage = styled.img`
 `;
 
 const WriteInputItem = styled.input`
-  flex-grow: 1;
+  flex: 1;
   border: none;
   outline: none;
   font-size: 16px;
   background-color: transparent;
+  box-sizing: border-box;
   &::placeholder {
     color: #cdcdcd;
   }

@@ -7,6 +7,7 @@ import XIcon from '../../assets/post/XIcon.svg';
 import deActiveHeart from '../../assets/post/deActiveHeart.svg';
 import repostIcon from '../../assets/post/repostIcon.svg';
 import shareIcon from '../../assets/post/shareIcon.svg';
+import getTimeDifference from '../../util/getTimeDifference';
 
 const UserImage = styled.div`
   width: 50px;
@@ -84,7 +85,7 @@ const IconImage = styled.img`
   cursor: pointer;
 `;
 
-export default function OxQuizPost() {
+export default function OxQuizPost({ post }) {
   // Icon 설정을 위한 배열
   const icons = [
     {
@@ -109,14 +110,14 @@ export default function OxQuizPost() {
       <UserArea>
         <UserImage />
         <TextArea>
-          <Text>sxxnoudxx</Text>
-          <TimeText>2시간</TimeText>
+          <Text>{post.author}</Text>
+          <TimeText>{getTimeDifference(post.created_at)}</TimeText>
         </TextArea>
         <IconImage src={menuIcon} size="24px" alt="menu icon" />
       </UserArea>
       <ContentArea>
         <QuizArea>
-          <Text>Q. 비행기 탈 때 맨발로 타야하나요?</Text>
+          <Text>{post.content}</Text>
           <OXArea>
             <IconImage src={OIcon} size="70px" alt="O icon" />
             <IconImage src={XIcon} size="70px" alt="X icon" />

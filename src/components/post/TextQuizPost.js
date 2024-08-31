@@ -6,6 +6,7 @@ import deActiveHeart from '../../assets/post/deActiveHeart.svg';
 import chatIcon from '../../assets/post/chatIcon.svg';
 import repostIcon from '../../assets/post/repostIcon.svg';
 import shareIcon from '../../assets/post/shareIcon.svg';
+import getTimeDifference from '../../util/getTimeDifference';
 
 const UserImage = styled.div`
   width: 50px;
@@ -102,7 +103,7 @@ const IconImage = styled.img`
   cursor: pointer;
 `;
 
-export default function TextQuizPost() {
+export default function TextQuizPost({ post }) {
   const [expanded, setExpanded] = useState(false);
 
   const icons = [
@@ -137,21 +138,13 @@ export default function TextQuizPost() {
       <UserArea>
         <UserImage />
         <TextArea>
-          <Text>sxxnoudxx</Text>
-          <TimeText>2시간</TimeText>
+          <Text>{post.author}</Text>
+          <TimeText>{getTimeDifference(post.created_at)}</TimeText>
         </TextArea>
         <IconImage src={menuIcon} size="24px" alt="menu icon" />
       </UserArea>
       <ContentArea>
-        <ReadOnlyTextArea expanded={expanded}>
-          This is the read-only text area where the user can see the content but
-          cannot edit it. This is the read-only text area where the user can see
-          the content but cannot edit it. This is the read-only text area where
-          the user can see the content but cannot edit it. This is the read-only
-          text area where the user can see the content but cannot edit it.
-          skrrrskrrrskrr skrrskrr This is some additional text to demonstrate
-          the &quot;more&quot; feature.
-        </ReadOnlyTextArea>
+        <ReadOnlyTextArea expanded={expanded}>{post.content}</ReadOnlyTextArea>
         {expanded ? (
           <MoreButton onClick={handleToggle}>줄이기</MoreButton>
         ) : (

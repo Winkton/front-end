@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import userState from '../store/userState';
 import Header from '../components/common/Header';
 import WritePostButton from '../components/common/WritePostButton';
 import Backdrop from '../components/common/Backdrop';
@@ -8,6 +10,7 @@ import OxQuizPost from '../components/post/OxQuizPost';
 import TextQuizPost from '../components/post/TextQuizPost';
 import ProfileIcon from '../assets/ProfileIcon.svg';
 import Tab from '../components/tab/Tab';
+import { getAllMyQAPosts, getAllMyOXPosts } from '../api/Post'; // API 함수 임포트
 
 const Container = styled.div`
   display: flex;
@@ -96,6 +99,42 @@ const CountryText = styled.div`
 export default function MyPage() {
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState('게시글');
+  const [user] = useRecoilState(userState);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (user && user.userId) {
+        try {
+          const [qaResponse, oxResponse] = await Promise.all([
+            getAllMyQAPosts(user.userId, user.userId), // 자신의 게시물 가져오기
+            getAllMyOXPosts(user.userId, user.userId), // 자신의 OX 퀴즈 가져오기
+          ]);
+
+          // QA와 OX 포스트 통합
+          const combinedPosts = [
+            ...qaResponse.result.map((post) => {
+              return { ...post, postType: 'QA' };
+            }),
+            ...oxResponse.result.map((post) => {
+              return { ...post, postType: 'OX' };
+            }),
+          ];
+
+          // 최신 날짜 순으로 정렬
+          const sortedPosts = combinedPosts.sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at);
+          });
+
+          setPosts(sortedPosts);
+        } catch (error) {
+          console.error('Error fetching posts:', error);
+        }
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
 
   const onClickInput = () => {
     setShowModal(true);
@@ -109,19 +148,22 @@ export default function MyPage() {
           <InfoArea>
             <UserInfoArea>
               <UserInfo>
-                <NameText>sxxnoudxx</NameText>
+                <NameText>{user.username}</NameText>
                 <FollowerText>팔로워 32명</FollowerText>
-                <CountryText>대한민국</CountryText>
+                <CountryText>{user.country}</CountryText>
               </UserInfo>
               <ProfileImage src={ProfileIcon} />
             </UserInfoArea>
             <ModifyProfileButton>프로필 수정</ModifyProfileButton>
           </InfoArea>
-          {/* Add Tab component here */}
           <Tab activeTab={activeTab} setActiveTab={setActiveTab} />
-          {/* Render content based on active tab */}
-          <OxQuizPost />
-          <TextQuizPost />
+          {/* 포스트 렌더링 */}
+          {posts.map((post) => {
+            if (post.postType === 'OX') {
+              return <OxQuizPost key={post.id} post={post} />;
+            }
+            return <TextQuizPost key={post.id} post={post} />;
+          })}
         </ContentArea>
       </WrapperArea>
       <WritePostButton onClick={onClickInput} />

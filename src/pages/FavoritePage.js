@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import userState from '../store/userState';
 import Header from '../components/common/Header';
 import WritePostButton from '../components/common/WritePostButton';
 import Backdrop from '../components/common/Backdrop';
@@ -8,6 +10,7 @@ import WirteInput from '../components/input/WirteInput';
 import WriteModal from '../components/WriteModal';
 import OxQuizPost from '../components/post/OxQuizPost';
 import TextQuizPost from '../components/post/TextQuizPost';
+import { getAllFollowQAPosts, getAllFollowOXPosts } from '../api/Post';
 
 const Container = styled.div`
   display: flex;
@@ -41,6 +44,43 @@ const ContentArea = styled.div`
 export default function FavoritePage() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const user = useRecoilValue(userState);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (user && user.userId) {
+        try {
+          const [qaResponse, oxResponse] = await Promise.all([
+            getAllFollowQAPosts(user.userId),
+            getAllFollowOXPosts(user.userId),
+          ]);
+          console.log(qaResponse, oxResponse);
+
+          // QA와 OX 포스트 통합
+          const combinedPosts = [
+            ...qaResponse.result.map((post) => {
+              return { ...post, postType: 'QA' };
+            }),
+            ...oxResponse.result.map((post) => {
+              return { ...post, postType: 'OX' };
+            }),
+          ];
+
+          // 최신 날짜 순으로 정렬
+          const sortedPosts = combinedPosts.sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at);
+          });
+
+          setPosts(sortedPosts);
+        } catch (error) {
+          console.error('Error fetching posts:', error);
+        }
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
 
   const onClickProfileImage = () => {
     navigate('/profile');
@@ -59,8 +99,13 @@ export default function FavoritePage() {
             onClickProfileImage={onClickProfileImage}
             onClickInput={onClickInput}
           />
-          <OxQuizPost />
-          <TextQuizPost />
+          {/* 포스트 렌더링 */}
+          {posts.map((post) => {
+            if (post.postType === 'OX') {
+              return <OxQuizPost key={post.id} post={post} />;
+            }
+            return <TextQuizPost key={post.id} post={post} />;
+          })}
         </ContentArea>
       </WrapperArea>
       <WritePostButton onClick={onClickInput} />
@@ -68,7 +113,7 @@ export default function FavoritePage() {
         <>
           <Backdrop
             onClick={() => {
-              return setShowModal(false);
+              setShowModal(false);
             }}
           />
           <WriteModal text="게시글 작성 모달임" />
