@@ -1,4 +1,5 @@
 import React from 'react';
+import { RecoilRoot } from 'recoil';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
@@ -14,16 +15,18 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/searchId" element={<SearchIdPage />} />
-          <Route path="/updatePassword" element={<UpdatePasswordPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/favorites" element={<FavoritePage />} />
-          <Route path="/profile" element={<MyPage />} />
-        </Routes>
+        <RecoilRoot>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/searchId" element={<SearchIdPage />} />
+            <Route path="/updatePassword" element={<UpdatePasswordPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/favorites" element={<FavoritePage />} />
+            <Route path="/profile" element={<MyPage />} />
+          </Routes>
+        </RecoilRoot>
       </BrowserRouter>
     </div>
   );

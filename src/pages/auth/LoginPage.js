@@ -8,6 +8,8 @@ import { ReactComponent as AuthBackground1 } from '../../assets/auth/AuthBackgro
 import { ReactComponent as AuthBackground2 } from '../../assets/auth/AuthBackground2.svg';
 import LogoText from '../../components/logo/LogoText';
 import { login } from '../../api/Auth';
+import { useSetRecoilState } from 'recoil';
+import userState from '../../store/userState';
 
 const Container = styled.div`
   display: flex;
@@ -73,6 +75,7 @@ export default function LoginPage() {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userState);
 
   const handleLogin = async () => {
     const loginData = {
@@ -80,9 +83,14 @@ export default function LoginPage() {
       password,
     };
 
-    const responseBody = await login(loginData);
-    if (responseBody) {
-      navigate('/'); // 예시: 대시보드 페이지로 이동
+    const response = await login(loginData);
+    if (response) {
+      setUser({
+        userId: response.userId,
+        username: response.username,
+        country: response.country,
+      });
+      navigate('/');
     } else {
       // 로그인 실패 처리
       alert('로그인 실패. 다시 시도해주세요.');
