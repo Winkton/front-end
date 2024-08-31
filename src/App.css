@@ -36,8 +36,11 @@ body {
 
 .App {
     position: relative;
-    background-color: var(--background-color);
+    background-color: #fafafa;
     font-family: 'Pretendard', 'sans-serif';
     font-weight: var(--font-medium);
-    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
