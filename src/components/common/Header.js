@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import activeHome from '../../assets/header/activeHome.svg';
 import deActiveHome from '../../assets/header/deActiveHome.svg';
 import activeSearch from '../../assets/header/activeSearch.svg';
@@ -62,12 +63,33 @@ const LogOutImage = styled.img`
 
 export default function Header() {
   const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
 
   const navItems = [
-    { name: 'home', activeIcon: activeHome, inactiveIcon: deActiveHome },
-    { name: 'search', activeIcon: activeSearch, inactiveIcon: deActiveSearch },
-    { name: 'heart', activeIcon: activeHeart, inactiveIcon: deActiveHeart },
-    { name: 'user', activeIcon: activeUser, inactiveIcon: deActiveUser },
+    {
+      name: 'home',
+      activeIcon: activeHome,
+      inactiveIcon: deActiveHome,
+      path: '/',
+    },
+    {
+      name: 'search',
+      activeIcon: activeSearch,
+      inactiveIcon: deActiveSearch,
+      path: '/search',
+    },
+    {
+      name: 'heart',
+      activeIcon: activeHeart,
+      inactiveIcon: deActiveHeart,
+      path: '/favorites',
+    },
+    {
+      name: 'user',
+      activeIcon: activeUser,
+      inactiveIcon: deActiveUser,
+      path: '/profile',
+    },
   ];
 
   return (
@@ -80,7 +102,8 @@ export default function Header() {
               key={item.name}
               isActive={activeTab === item.name}
               onClick={() => {
-                return setActiveTab(item.name);
+                setActiveTab(item.name);
+                navigate(item.path); // 경로로 이동
               }}
             >
               <NavImage
