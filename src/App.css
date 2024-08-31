@@ -14,6 +14,8 @@ body {
 :root {
     /* color */
     --background-color: #FEFEFE;
+    /* link color */
+    --color-blue-link: #005EFF;
 
     /* font-weight */
     --font-thin: 100;
