@@ -70,7 +70,7 @@ export default function UpdatePasswordPage() {
 
       if (responseBody.Message === '비밀번호 변경 완료') {
         alert('비밀번호 변경에 성공하였습니다.');
-        navigate('/login');
+        navigate('/');
       } else {
         alert('비밀번호 변경 실패. 다시 시도해주세요.');
       }

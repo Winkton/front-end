@@ -90,7 +90,7 @@ export default function LoginPage() {
         username: response.username,
         country: response.country,
       });
-      navigate('/');
+      navigate('/main');
     } else {
       // 로그인 실패 처리
       alert('로그인 실패. 다시 시도해주세요.');
