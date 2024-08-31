@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import WritePostButton from '../components/common/WritePostButton';
+import Backdrop from '../components/common/Backdrop';
 import WirteInput from '../components/input/WirteInput';
 import WriteModal from '../components/WriteModal';
+import OxQuizPost from '../components/post/OxQuizPost';
+import TextQuizPost from '../components/post/TextQuizPost';
 
 const Container = styled.div`
   display: flex;
@@ -35,16 +38,6 @@ const ContentArea = styled.div`
   height: 100vh;
 `;
 
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-`;
-
 export default function MainPage() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -66,6 +59,8 @@ export default function MainPage() {
             onClickProfileImage={onClickProfileImage}
             onClickInput={onClickInput}
           />
+          <OxQuizPost />
+          <TextQuizPost />
         </ContentArea>
       </WrapperArea>
       <WritePostButton onClick={onClickInput} />

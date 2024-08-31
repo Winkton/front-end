@@ -10,6 +10,7 @@ import deActiveHeart from '../../assets/header/deActiveHeart.svg';
 import activeUser from '../../assets/header/activeUser.svg';
 import deActiveUser from '../../assets/header/deActiveUser.svg';
 import logoutIcon from '../../assets/header/logoutIcon.svg';
+import Logo from '../../assets/Logo.svg';
 
 const Container = styled.div`
   position: fixed;
@@ -29,10 +30,6 @@ const NavArea = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
-`;
-
-const Text = styled.div`
-  font-size: 20px;
 `;
 
 const NavItem = styled.div`
@@ -59,6 +56,11 @@ const NavImage = styled.img`
 const LogOutImage = styled.img`
   width: 24px;
   height: 24px;
+`;
+
+const LogoImage = styled.img`
+  width: 60px;
+  height: 40px;
 `;
 
 export default function Header() {
@@ -94,7 +96,7 @@ export default function Header() {
 
   return (
     <Container>
-      <Text>HanQu</Text>
+      <LogoImage src={Logo} />
       <NavArea>
         {navItems.map((item) => {
           return (
