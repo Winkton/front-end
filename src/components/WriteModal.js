@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 import PostHashTagButton from './button/PostHashTagButton';
 import WriteButton from './button/WriteButton';
+import { createOx, createQnA } from '../api/Post';
+import userState from '../store/userState';
 
 const Container = styled.div`
   display: flex;
@@ -70,20 +73,51 @@ const WriteButtonDiv = styled.div`
 `;
 
 export default function WriteModal() {
-  const [selectedTag, setSelectedTag] = useState(null);
+  const userInfo = useRecoilValue(userState);
+  const [selectedTag, setSelectedTag] = useState('O/X');
+  const [createForm, setCreateForm] = useState({
+    content: '',
+  });
 
   const handleTagClick = (tag) => {
     setSelectedTag(tag);
+    setCreateForm((prevForm) => {
+      return { ...prevForm, type: tag };
+    });
   };
 
-  const onCreate = () => {};
+  const onCreate = async () => {
+    try {
+      if (selectedTag === 'O/X') {
+        await createOx(createForm, userInfo.userId);
+        alert('O/X 게시글이 생성되었습니다.');
+      } else if (selectedTag === 'Q&A') {
+        await createQnA(createForm, userInfo.userId);
+        alert('Q&A 게시글이 생성되었습니다.');
+      } else {
+        alert('게시글이 이상해요.');
+      }
+    } catch (error) {
+      alert('게시글 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleContent = (e) => {
+    const { value } = e.target;
+    setCreateForm((prevForm) => {
+      return {
+        ...prevForm,
+        content: value,
+      };
+    });
+  };
 
   return (
     <Container>
       <HeaderContainer>
         <PostHeader>
           <ImageDiv />
-          <IdDiv>userId</IdDiv>
+          <IdDiv>{userInfo.userId}</IdDiv>
         </PostHeader>
         <HashTagContainer>
           <PostHashTagButton
@@ -102,9 +136,14 @@ export default function WriteModal() {
           />
         </HashTagContainer>
       </HeaderContainer>
-      <PostBody placeholder="게시글을 작성하시오." />
+      <PostBody
+        name="content"
+        value={createForm.content}
+        placeholder="게시글을 작성하시오."
+        onChange={handleContent}
+      />
       <WriteButtonDiv>
-        <WriteButton onClick={onCreate()} />
+        <WriteButton onClick={onCreate} />
       </WriteButtonDiv>
     </Container>
   );

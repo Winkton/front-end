@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-// import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import Header from '../components/common/Header';
 import WritePostButton from '../components/common/WritePostButton';
 import WriteModal from '../components/WriteModal';
 import SearchUser from '../components/user/SearchUser';
 import SearchInput from '../components/input/SearchInput';
+import { findUsers, followUser } from '../api/Post';
+import userState from '../store/userState';
 
 const Container = styled.div`
   display: flex;
@@ -33,7 +35,7 @@ const WrapperArea = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Backdrop = styled.div`
@@ -47,19 +49,39 @@ const Backdrop = styled.div`
 `;
 
 export default function SearchPage() {
-  // const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const userInfo = useRecoilValue(userState);
 
-  // 더미 데이터
-  const searchUsers = [
-    { userId: 'user1', username: 'John Doe', count: 150 },
-    { userId: 'user2', username: 'Jane Smith', count: 200 },
-    { userId: 'user3', username: 'Alice Johnson', count: 300 },
-    { userId: 'user4', username: 'Bob Brown', count: 400 },
-  ];
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const data = await findUsers(userInfo.userId);
+        setUsers(data);
+      } catch (err) {
+        setError('사용자 데이터를 가져오는 데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUsers();
+  }, [userInfo.userId]);
 
   const onClickInput = () => {
     setShowModal(true);
+  };
+
+  const handleFollowClick = async (targetUserId) => {
+    try {
+      await followUser(userInfo.userId, targetUserId);
+      const updatedUsers = await findUsers(userInfo.userId);
+      setUsers(updatedUsers);
+    } catch (err) {
+      alert('팔로우 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -68,16 +90,26 @@ export default function SearchPage() {
       <WrapperArea>
         <ContentArea>
           <SearchInput />
-          {searchUsers.map((user) => {
-            return (
-              <SearchUser
-                key={user.userId}
-                userId={user.userId}
-                username={user.username}
-                count={user.count}
-              />
-            );
-          })}
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            users.map((user) => {
+              return (
+                <SearchUser
+                  key={user.id}
+                  userId={user.id}
+                  username={user.name}
+                  followed={user.followed}
+                  followerCount={user.followerCount}
+                  onFollowClick={() => {
+                    return handleFollowClick(user.id);
+                  }} // userId 전달
+                />
+              );
+            })
+          )}
         </ContentArea>
       </WrapperArea>
       <WritePostButton onClick={onClickInput} />
