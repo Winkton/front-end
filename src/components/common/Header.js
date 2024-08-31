@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import activeHome from '../../assets/header/activeHome.svg';
 import deActiveHome from '../../assets/header/deActiveHome.svg';
 import activeSearch from '../../assets/header/activeSearch.svg';
@@ -66,6 +66,7 @@ const LogoImage = styled.img`
 export default function Header() {
   const [activeTab, setActiveTab] = useState('home');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     {
@@ -94,6 +95,21 @@ export default function Header() {
     },
   ];
 
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const activeItem = navItems.find((item) => {
+      return item.path === currentPath;
+    });
+    if (activeItem) {
+      setActiveTab(activeItem.name);
+    }
+  }, [location.pathname]);
+
+  const handleNavClick = (item) => {
+    setActiveTab(item.name);
+    navigate(item.path);
+  };
+
   return (
     <Container>
       <LogoImage src={Logo} />
@@ -104,20 +120,20 @@ export default function Header() {
               key={item.name}
               isActive={activeTab === item.name}
               onClick={() => {
-                setActiveTab(item.name);
-                navigate(item.path); // 경로로 이동
+                return handleNavClick(item); // 화살표 함수 블록 문으로 return 추가
               }}
             >
               <NavImage
                 src={
                   activeTab === item.name ? item.activeIcon : item.inactiveIcon
                 }
+                alt={`${item.name} icon`}
               />
             </NavItem>
           );
         })}
       </NavArea>
-      <LogOutImage src={logoutIcon} />
+      <LogOutImage src={logoutIcon} alt="logout icon" />
     </Container>
   );
 }
