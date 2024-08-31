@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import FollowButton from '../button/FollowButton';
 
@@ -6,20 +7,18 @@ const SearchUserContainer = styled.div`
   flex-direction: column;
   width: 100%;
   border-bottom: 1px solid #cccccc;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding: 0 40px;
 `;
 
 const UserDiv = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 30px;
+  margin: 30px 0;
 `;
 
 const ProfileDiv = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 20px;
 `;
@@ -27,7 +26,7 @@ const ProfileDiv = styled.div`
 const ImageDiv = styled.div`
   width: 60px;
   height: 60px;
-  border-radius: 100%;
+  border-radius: 50%;
   background-color: #bed7ff;
 `;
 
@@ -42,19 +41,23 @@ const IdDiv = styled.div`
 `;
 
 const NameDiv = styled.div`
-  text-color: #868686;
+  color: #868686;
   font-size: 20px;
 `;
 
 const FollowerCountDiv = styled.div`
-  display: flex;
-  justify-content: flex-start;
   font-size: 20px;
   margin-left: 80px;
   margin-bottom: 25px;
 `;
 
-export default function SearchUser({ userId, username, count }) {
+export default function SearchUser({
+  userId,
+  username,
+  followed,
+  followerCount,
+  onFollowClick,
+}) {
   return (
     <SearchUserContainer>
       <UserDiv>
@@ -65,9 +68,9 @@ export default function SearchUser({ userId, username, count }) {
             <NameDiv>{username}</NameDiv>
           </IdNameDiv>
         </ProfileDiv>
-        <FollowButton state="팔로우" />
+        <FollowButton initialState={followed} onClick={onFollowClick} />
       </UserDiv>
-      <FollowerCountDiv>팔로워 {count}명</FollowerCountDiv>
+      <FollowerCountDiv>팔로워 {followerCount}명</FollowerCountDiv>
     </SearchUserContainer>
   );
 }

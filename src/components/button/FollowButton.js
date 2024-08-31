@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-// 스타일 설정
 const FollowButtonDiv = styled.div`
   display: flex;
   align-items: center;
@@ -11,7 +10,7 @@ const FollowButtonDiv = styled.div`
   border-radius: 15px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
-  text-color: #000000;
+  color: #000000;
   font-size: 24px;
   cursor: pointer;
   &:hover {
@@ -19,13 +18,14 @@ const FollowButtonDiv = styled.div`
   }
 `;
 
-// FollowButton 컴포넌트
-function FollowButton({ initialState }) {
+function FollowButton({ initialState, onClick }) {
   const [isFollowing, setIsFollowing] = useState(initialState === '팔로잉');
 
   const handleClick = () => {
     setIsFollowing((prevState) => {
-      return !prevState;
+      const newState = !prevState;
+      onClick(); // 수정된 부분
+      return newState;
     });
   };
 
