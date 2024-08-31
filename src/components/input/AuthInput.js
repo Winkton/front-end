@@ -10,9 +10,10 @@ const AuthInputBox = styled.input`
   padding-right: 22px;
 `;
 
-function AuthInput({ placeholder, type = 'text', value, onChange }) {
+function AuthInput({ name, placeholder, type = 'text', value, onChange }) {
   return (
     <AuthInputBox
+      name={name}
       placeholder={placeholder}
       type={type}
       value={value}

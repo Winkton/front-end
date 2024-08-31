@@ -96,6 +96,7 @@ export default function LoginPage() {
       <LogoText logoText="한국 거주 유학생들을 위한 한국 문화 커뮤니티 플랫폼" />
       <ContentArea>
         <AuthInput
+          name="userId"
           placeholder="아이디를 입력해주세요"
           value={userId}
           onChange={(e) => {
@@ -104,6 +105,7 @@ export default function LoginPage() {
         />
         <LinkWrapper>
           <AuthInput
+            name="password"
             placeholder="비밀번호를 입력해주세요"
             type="password"
             value={password}

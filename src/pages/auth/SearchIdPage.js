@@ -9,6 +9,7 @@ import LogoText from '../../components/logo/LogoText';
 import AuthButton from '../../components/button/AuthButton';
 import { searchId } from '../../api/Auth';
 
+// Styled components
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,19 +45,19 @@ const AuthBackground2Styled = styled(AuthBackground2)`
   z-index: 0;
 `;
 
-export default function searchIdPage() {
+export default function SearchIdPage() {
   const [userId, setUserId] = useState('');
   const navigate = useNavigate();
 
-  const handleSearchId = async () => {
-    const searchIdData = {
-      userId,
-    };
+  const handleInputChange = (e) => {
+    setUserId(e.target.value);
+  };
 
+  const handleSearchId = async () => {
     try {
-      const responseBody = await searchId(searchIdData);
-      if (responseBody.result && responseBody) {
-        navigate('/updatePassword');
+      const responseBody = await searchId({ userId });
+      if (responseBody && responseBody.userId) {
+        navigate('/updatePassword', { state: { userId } });
       } else {
         alert('아이디 찾기 실패.');
       }
@@ -74,9 +75,7 @@ export default function searchIdPage() {
         <AuthInput
           placeholder="아이디를 입력해주세요"
           value={userId}
-          onChange={(e) => {
-            return setUserId(e.target.value);
-          }}
+          onChange={handleInputChange}
         />
         <AuthButton value="아이디 확인" onClick={handleSearchId} />
       </ContentArea>

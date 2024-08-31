@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '../../assets/Logo.svg';
 import { ReactComponent as AuthBackground1 } from '../../assets/auth/AuthBackground1.svg';
 import { ReactComponent as AuthBackground2 } from '../../assets/auth/AuthBackground2.svg';
@@ -44,15 +44,17 @@ const AuthBackground2Styled = styled(AuthBackground2)`
   z-index: 0;
 `;
 
-export default function updatePasswordPage() {
-  const [newPassword, setNewPassword] = useState('');
-  const [retryNewPassword, setRetryNewPassword] = useState('');
+export default function UpdatePasswordPage() {
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: '',
+    retryNewPassword: '',
+  });
   const navigate = useNavigate();
+  const location = useLocation();
+  const { userId } = location.state || {};
 
   const handleUpdatePassword = async () => {
-    const updatePasswordData = {
-      newPassword,
-    };
+    const { newPassword, retryNewPassword } = passwordForm;
 
     if (retryNewPassword !== newPassword) {
       alert('입력한 비밀번호와 일치하지 않습니다.');
@@ -60,16 +62,31 @@ export default function updatePasswordPage() {
     }
 
     try {
+      const updatePasswordData = {
+        userId,
+        password: newPassword,
+      };
       const responseBody = await updatePassword(updatePasswordData);
-      if (responseBody) {
+
+      if (responseBody.Message === '비밀번호 변경 완료') {
         alert('비밀번호 변경에 성공하였습니다.');
         navigate('/login');
       } else {
-        alert('아이디 찾기 실패. 다시 시도해주세요.');
+        alert('비밀번호 변경 실패. 다시 시도해주세요.');
       }
     } catch (error) {
-      alert('아이디 찾기 중 오류가 발생했습니다.');
+      alert('비밀번호 변경 중 오류가 발생했습니다.');
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
   };
 
   return (
@@ -79,20 +96,20 @@ export default function updatePasswordPage() {
       <LogoText logoText="한국 거주 유학생들을 위한 한국 문화 커뮤니티 플랫폼" />
       <ContentArea>
         <AuthInput
+          name="newPassword"
           placeholder="새 비밀번호를 입력해주세요"
-          value={newPassword}
-          onChange={(e) => {
-            return setNewPassword(e.target.value);
-          }}
+          type="password"
+          value={passwordForm.newPassword}
+          onChange={handleInputChange}
         />
         <AuthInput
-          placeholder="다시 입력해주세요"
-          value={newPassword}
-          onChange={(e) => {
-            return setRetryNewPassword(e.target.value);
-          }}
+          name="retryNewPassword"
+          placeholder="다시 입력해주세요."
+          type="password"
+          value={passwordForm.retryNewPassword}
+          onChange={handleInputChange}
         />
-        <AuthButton value="비밀변호 재설정" onClick={handleUpdatePassword} />
+        <AuthButton value="비밀번호 재설정" onClick={handleUpdatePassword} />
       </ContentArea>
       <AuthBackground2Styled />
     </Container>

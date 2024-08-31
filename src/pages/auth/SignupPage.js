@@ -62,7 +62,8 @@ export default function SignupPage() {
     try {
       const responseBody = await signUp(signupData);
       if (responseBody) {
-        navigate('/');
+        alert('회원가입에 성공하였습니다.');
+        navigate('/login');
       } else {
         alert('회원가입 실패. 다시 시도해주세요.');
       }
@@ -78,6 +79,7 @@ export default function SignupPage() {
       <LogoText logoText="한국 거주 유학생들을 위한 한국 문화 커뮤니티 플랫폼" />
       <ContentArea>
         <AuthInput
+          name="username"
           placeholder="이름을 입력해주세요"
           value={username}
           onChange={(e) => {
@@ -85,6 +87,7 @@ export default function SignupPage() {
           }}
         />
         <AuthInput
+          name="userId"
           placeholder="아이디를 입력해주세요"
           value={userId}
           onChange={(e) => {
@@ -92,6 +95,7 @@ export default function SignupPage() {
           }}
         />
         <AuthInput
+          name="password"
           placeholder="비밀번호를 입력해주세요"
           value={password}
           type="password"
@@ -100,6 +104,7 @@ export default function SignupPage() {
           }}
         />
         <AuthInput
+          name="country"
           placeholder="국가를 입력해주세요"
           value={country}
           onChange={(e) => {
