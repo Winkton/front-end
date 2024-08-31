@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import AuthInput from '../../components/input/AuthInput';
 import AuthButton from '../../components/button/AuthButton';
 import { ReactComponent as Logo } from '../../assets/Logo.svg';
@@ -8,7 +9,6 @@ import { ReactComponent as AuthBackground1 } from '../../assets/auth/AuthBackgro
 import { ReactComponent as AuthBackground2 } from '../../assets/auth/AuthBackground2.svg';
 import LogoText from '../../components/logo/LogoText';
 import { login } from '../../api/Auth';
-import { useSetRecoilState } from 'recoil';
 import userState from '../../store/userState';
 
 const Container = styled.div`
