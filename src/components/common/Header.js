@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import activeHome from '../../assets/header/activeHome.svg';
 import deActiveHome from '../../assets/header/deActiveHome.svg';
 import activeSearch from '../../assets/header/activeSearch.svg';
@@ -11,6 +12,7 @@ import activeUser from '../../assets/header/activeUser.svg';
 import deActiveUser from '../../assets/header/deActiveUser.svg';
 import logoutIcon from '../../assets/header/logoutIcon.svg';
 import Logo from '../../assets/Logo.svg';
+import userState from '../../store/userState';
 
 const Container = styled.div`
   position: fixed;
@@ -63,17 +65,18 @@ const LogoImage = styled.img`
   height: 40px;
 `;
 
-export default function Header() {
+function Header() {
   const [activeTab, setActiveTab] = useState('home');
   const navigate = useNavigate();
   const location = useLocation();
+  const setUserInfo = useSetRecoilState(userState);
 
   const navItems = [
     {
       name: 'home',
       activeIcon: activeHome,
       inactiveIcon: deActiveHome,
-      path: '/',
+      path: '/main',
     },
     {
       name: 'search',
@@ -110,6 +113,15 @@ export default function Header() {
     navigate(item.path);
   };
 
+  const handleLogout = () => {
+    setUserInfo({
+      userId: '',
+      username: '',
+      country: '',
+    });
+    navigate('/');
+  };
+
   return (
     <Container>
       <LogoImage src={Logo} />
@@ -133,7 +145,9 @@ export default function Header() {
           );
         })}
       </NavArea>
-      <LogOutImage src={logoutIcon} alt="logout icon" />
+      <LogOutImage src={logoutIcon} alt="logout icon" onClick={handleLogout} />
     </Container>
   );
 }
+
+export default Header;
