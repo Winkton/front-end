@@ -17,8 +17,8 @@ export default function App() {
       <BrowserRouter>
         <RecoilRoot>
           <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/main" element={<MainPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/searchId" element={<SearchIdPage />} />
             <Route path="/updatePassword" element={<UpdatePasswordPage />} />

@@ -19,7 +19,7 @@ const FollowButtonDiv = styled.div`
 `;
 
 function FollowButton({ initialState, onClick }) {
-  const [isFollowing, setIsFollowing] = useState(initialState === '팔로잉');
+  const [isFollowing, setIsFollowing] = useState(initialState === true);
 
   const handleClick = () => {
     setIsFollowing((prevState) => {

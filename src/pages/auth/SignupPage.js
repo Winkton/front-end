@@ -63,7 +63,7 @@ export default function SignupPage() {
       const responseBody = await signUp(signupData);
       if (responseBody) {
         alert('회원가입에 성공하였습니다.');
-        navigate('/login');
+        navigate('/');
       } else {
         alert('회원가입 실패. 다시 시도해주세요.');
       }
